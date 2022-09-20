@@ -18,14 +18,28 @@ public  class ExternalSystemService {
         }
 
     }
+    // To be reviewed
+    public void notifyAttendeeByEmail(List<Contact> contacts){
+        // If email is sent now why need a task for it
+        addTasks(contacts);
+        SendEmailUtility.sendEmailTo(contacts);
 
-    public void notifyAttendeeByEmail(Contact account){
-      
-        Task tk = new Task();
-        tk.Subject = 'Send Email To' + account.name;
-        tk.Status = 'Open';
-        tk.Priority = 'Normal';
-        tk.WhatId = account.ID;
-        insert tk;
     } 
+
+    public static void addTasks(list<Contact> contacts) {
+        List<Task> taskList = new List<Task>();
+        for(Contact contact : contacts) {
+            Task task = new Task();
+            task.Subject = 'Send Email To' + contact.name;
+            task.Status = 'Open';
+            task.Priority = 'Normal';
+            task.WhatId = contact.accountId;
+            taskList.add(task);
+        }
+
+        if(taskList.size() > 0) {
+            insert taskList;
+        }
+        
+    }
 }
