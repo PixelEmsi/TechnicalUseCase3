@@ -1,34 +1,23 @@
 public  class ExternalSystemService {
+    // no need to pass cases its useless
+    // nested loops make the code complicated and not readeable
+    @future(callout=true)
+    public static void registerAttendees(list<ID> accountIds){
+        
+        list<Contact> attendees = ContactRepository.getContactsByAccountIds(accountIds);
+      
+        // send request
+        HttpResponse response = ContactCalloutService.fireCallout(attendees);
 
-    private String webServiceURL;
-
-    public ExternalSystemService(){
-        this.webServiceURL = 'https://th-apex-http-callout.herokuapp.com/animals';
-    }
-
-    public void registerAttendees(Case r){
-            for(Account a : [SELECT id FROM Account where id = :r.AccountId]){
-                for(Contact c : [SELECT id,name, email FROM Contact where accountid =: a.id ]){
-                    Http http = new Http();
-                    HttpRequest request = new HttpRequest();
-                    request.setEndpoint(this.webServiceURL);
-                    request.setMethod('POST');
-                    request.setHeader('Content-Type', 'application/json;charset=UTF-8');
-                    // Set the body as a JSON object
-                    request.setBody('{"name":"'+ c.name + '-' + c.email  +'}');
-                    HttpResponse response = http.send(request);
-                    // Parse the JSON response
-                    if (response.getStatusCode() != 201) {
-                        System.debug('The status code returned was not expected: ' +
-                            response.getStatusCode() + ' ' + response.getStatus());
-                    } else {
-                       // Everything went as expected.
-                       notifyAttendeeByEmail(c);
-                    }
-                }
-            
+        if (response.getStatusCode() != 201) {
+            System.debug('The status code returned was not expected: ' +
+                response.getStatusCode() + ' ' + response.getStatus());
+        } else {
+           // Everything went as expected.
+           notifyAttendeeByEmail(attendees);
         }
-    } 
+
+    }
 
     public void notifyAttendeeByEmail(Contact account){
       
@@ -39,6 +28,4 @@ public  class ExternalSystemService {
         tk.WhatId = account.ID;
         insert tk;
     } 
-
-
 }
