@@ -17,6 +17,6 @@ public class CaseTriggerHandler extends TriggerHandler {
     }
 
     public override void beforeUpdate() {
-        CaseTriggerHelper.sendRequestsToReservationSystem(this.newCaseList);
+        CaseTriggerHelper.sendRequestsToReservationSystem(this.newCaseList, this.oldCaseMap);
     }
 }

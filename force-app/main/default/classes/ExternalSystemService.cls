@@ -1,11 +1,12 @@
-public  class ExternalSystemService {
+public class ExternalSystemService {
     // no need to pass cases its useless
     // nested loops make the code complicated and not readeable
     @future(callout=true)
     public static void registerAttendees(list<ID> accountIds){
         
         list<Contact> attendees = ContactRepository.getContactsByAccountIds(accountIds);
-      
+        // exception handling 
+        // why not tdo exception handling in the client web or mobile ??
         // send request
         HttpResponse response = ContactCalloutService.fireCallout(attendees);
 
