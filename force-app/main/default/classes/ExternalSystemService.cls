@@ -1,27 +1,21 @@
 public class ExternalSystemService {
-    // no need to pass cases its useless
-    // nested loops make the code complicated and not readeable
     @future(callout=true)
     public static void registerAttendees(list<ID> accountIds){
         
         list<Contact> attendees = ContactRepository.getContactsByAccountIds(accountIds);
-        // exception handling 
-        // why not tdo exception handling in the client web or mobile ??
-        // send request
+        // why not do exception handling in the client web or mobile ??
         HttpResponse response = ContactCalloutService.fireCallout(attendees);
 
         if (response.getStatusCode() != 201) {
             System.debug('The status code returned was not expected: ' +
                 response.getStatusCode() + ' ' + response.getStatus());
         } else {
-           // Everything went as expected.
            notifyAttendeeByEmail(attendees);
         }
 
     }
-    // To be reviewed
-    public void notifyAttendeeByEmail(List<Contact> contacts){
-        // If email is sent now why need a task for it
+
+    public static void notifyAttendeeByEmail(List<Contact> contacts){
         addTasks(contacts);
         SendEmailUtility.sendEmailTo(contacts);
 
